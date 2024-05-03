@@ -1,0 +1,7 @@
+spring.application.name=info-service
+
+# Meta
+infoservice.app.metaAccessToken=
+infoservice.app.metaAppSecret=
+infoservice.app.metaAppId=
+infoservice.app.apiVersion=v19.0
