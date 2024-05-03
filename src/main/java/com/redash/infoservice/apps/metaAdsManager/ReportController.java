@@ -14,24 +14,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/meta")
-public class CampaignReportController {
-    private static final Logger logger = LoggerFactory.getLogger(CampaignReportController.class);
-    private final CampaignReportService campaignReportService;
+public class ReportController {
+    private final ReportService reportService;
 
     @Autowired
-    public CampaignReportController(CampaignReportService campaignReportService) {
-        this.campaignReportService = campaignReportService;
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
     }
 
-    @GetMapping(path = "/campaign-report")
-    public ResponseEntity<List<CampaignReportDto>> getCampaignReport(
+    @GetMapping(path = "/report")
+    public ResponseEntity<List<ReportDto>> getReport(
             @RequestParam("start_date") String startDate,
             @RequestParam("end_date") String endDate,
-            @RequestParam("ad_account_id") String adAccountId) throws APIException {
-        List<CampaignReportDto> campaignReportDto = campaignReportService.getCampaignReport(
-                startDate, endDate, adAccountId
+            @RequestParam("ad_account_id") String adAccountId,
+            @RequestParam("level") String level) throws APIException {
+        List<ReportDto> ReportDto = reportService.getReport(
+                startDate, endDate, adAccountId, level
         );
 
-        return ResponseEntity.ok(campaignReportDto);
+        return ResponseEntity.ok(ReportDto);
     }
 }

@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class CampaignReportDto {
+public class ReportDto {
     private String reach;
     private String frequency;
     private String impressions;
@@ -23,6 +23,8 @@ public class CampaignReportDto {
     private String inlineLinkClickCtr;
     private String inlineLinkClicks;
     private String inlinePostEngagement;
+    private String adsetId;
+    private String adsetName;
     private String dateStart;
     private String dateStop;
 }
