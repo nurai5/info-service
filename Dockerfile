@@ -8,5 +8,4 @@ COPY --from=builder /app/info-service-0.0.1-SNAPSHOT.jar .
 EXPOSE 8080
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
-ENV JAVA_OPTS=""
-CMD ["java", "-jar", "${JAVA_OPTS}", "info-service-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "info-service-0.0.1-SNAPSHOT.jar"]
