@@ -3,9 +3,10 @@ package com.redash.infoservice.apps.metaAdsManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+
 import com.facebook.ads.sdk.*;
-import java.util.Arrays;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -13,20 +14,12 @@ public class ReportService {
     @Value("${infoservice.app.metaAccessToken}")
     private String accessToken;
 
-    @Value("${infoservice.app.metaAppSecret}")
-    private String appSecret;
-
-    @Value("${infoservice.app.metaAppId}")
-    private String appId;
-
     public List<ReportDto>  getReport(
             String startDate,
             String endDate,
             String adAccountId,
             String level) throws APIException {
         String accessToken = this.accessToken;
-        String appSecret = this.appSecret;
-        String appId = this.appId;
         APIContext context = new APIContext(accessToken).enableDebug(true);
         AdsInsights.EnumLevel enumLevel;
         try {
@@ -39,7 +32,7 @@ public class ReportService {
                 .setTimeRange("{\"since\":\"" + startDate + "\",\"until\":\"" + endDate + "\"}")
                 .setFiltering("[]")
                 .setLevel(enumLevel)
-                .setBreakdowns(Arrays.asList())
+                .setBreakdowns(List.of())
                 .requestField("reach")
                 .requestField("frequency")
                 .requestField("impressions")
@@ -59,9 +52,10 @@ public class ReportService {
                 .requestField("inline_post_engagement")
                 .requestField("adset_id")
                 .requestField("adset_name")
+                .requestField("cost_per_action_type")
                 .execute();
 
-        List<ReportDto> dtos = insights.stream().map(insight -> {
+        return insights.stream().map(insight -> {
             ReportDto dto = new ReportDto();
             dto.setReach(insight.getFieldReach());
             dto.setFrequency(insight.getFieldFrequency());
@@ -81,11 +75,19 @@ public class ReportService {
             dto.setInlinePostEngagement(insight.getFieldInlinePostEngagement());
             dto.setAdsetId(insight.getFieldAdsetId());
             dto.setAdsetName(insight.getFieldAdsetName());
+            List<Map<String, String>> costPerActionType = Optional.ofNullable(insight.getFieldCostPerActionType())
+                    .map(list -> list.stream()
+                            .map(action -> Map.of(
+                                    "actionType", action.getFieldActionType(),
+                                    "value", action.getFieldValue()
+                            ))
+                            .collect(Collectors.toList())
+                    )
+                    .orElse(Collections.emptyList());
+            dto.setCostPerActionType(costPerActionType);
             dto.setDateStart(startDate);
             dto.setDateStop(endDate);
             return dto;
         }).collect(Collectors.toList());
-
-        return dtos;
     }
 }
