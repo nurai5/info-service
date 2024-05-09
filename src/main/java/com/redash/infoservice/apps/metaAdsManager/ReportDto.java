@@ -28,6 +28,9 @@ public class ReportDto {
     private String inlinePostEngagement;
     private String adsetId;
     private String adsetName;
+    private String objective;
+    private String costPerResult;
+    private String result;
     private List<Map<String, String>>  costPerActionType;
     private String dateStart;
     private String dateStop;
